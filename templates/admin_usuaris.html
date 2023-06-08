@@ -1,0 +1,10 @@
+{% block content %}
+    <h1>{% block title %} Usuaris {% endblock %}</h1>
+    {% for usuari in usuaris %}
+        <div class='usuari'>
+            <h2>{{ usuari[0] }}</h2>
+            <p>Nom: {{ usuari[1] }}</p>
+            <p>Contrassenya: {{ usuari[2] }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

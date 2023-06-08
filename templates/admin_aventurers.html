@@ -1,0 +1,8 @@
+{% block content %}
+    <h1>{% block title %} Aventurers {% endblock %}</h1>
+    {% for aventurer in aventurers %}
+        <div class='aventurer'>
+            <h2>{{ aventurer[0] }}</h2>
+        </div>
+    {% endfor %}
+{% endblock %}

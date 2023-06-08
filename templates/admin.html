@@ -1,0 +1,13 @@
+
+{% block content %}
+    <h1>{% block title %} Administració {% endblock %}</h1>
+    {% for classe in classes %}
+        <div class='classe'>
+            <h2>{{classe}}</h2>
+            <button onclick="location.href = 'http://127.0.0.1:5000/admin/{{classe}}/llista';">Llista</button>
+            <button onclick="location.href = 'http://127.0.0.1:5000/admin/{{classe}}/crear';">Crear</button>
+            <button onclick="location.href = 'http://127.0.0.1:5000/admin/{{classe}}/modificar';">Modificar</button>
+            <button onclick="location.href = 'http://127.0.0.1:5000/admin/{{classe}}/eliminar';">Eliminar</button>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% block content %}
+    <h1>{% block title %} Poblacions {% endblock %}</h1>
+    {% for poblacio in poblacions %}
+        <div class='poblacio'>
+            <h2>{{ poblacio[0] }}</h2>
+            <p>(Comarca: {{ poblacio[1] }})</p>
+            <p>(Altitud: {{ poblacio[2] }})</p>
+            <p>(Número habitants: {{ poblacio[3] }})</p>
+        </div>
+    {% endfor %}
+{% endblock %}
