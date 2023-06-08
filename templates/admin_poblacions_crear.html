@@ -1,0 +1,38 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Crea una població {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="nom_poblacio">Nom de la població</label>
+            <input type="text" name="nom_poblacio"
+                   placeholder="Nom de la població">
+            </input>
+        </p>
+
+        <p>
+            <label for="comarca">Comarca</label>
+            <input type="text" name="comarca"
+                   placeholder="Comarca">
+            </input>
+        </p>
+
+        <p>
+            <label for="altitud">Altitud en metres</label>
+            <input type="number" name="altitud"
+                   placeholder="Altitud en metres">
+            </input>
+        </p>
+
+        <p>
+            <label for="poblacio">Nombre d'habitants</label>
+            <input type="number" name="poblacio"
+                   placeholder="Poblacio">
+            </input>
+        </p>
+
+        <p>
+            <button type="enviat">Crear població</button>
+        </p>
+    </form>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+{% endblock %}

@@ -1,5 +1,6 @@
 {% block content %}
     <h1>{% block title %} Usuaris {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
     {% for usuari in usuaris %}
         <div class='usuari'>
             <h2>{{ usuari[0] }}</h2>

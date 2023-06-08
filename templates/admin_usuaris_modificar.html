@@ -1,0 +1,24 @@
+<form method="POST">
+    <p>
+        <label for="nom_usuari">Usuari:</label>
+        <input type="text" id="nom_usuari" name="nom_usuari"
+               value="{{ nom_usuari }}" required>
+    </p>
+    <p>
+        <label for="nom">Nom:</label>
+        <input type="text" id="nom" name="nom"
+               value="{{ nom }}">
+    </p>
+    <p>
+        <label for="contrassenya">Contrassenya:</label>
+        <input type="text" id="contrassenya" name="contrassenya"
+               value="{{ contrassenya }}">
+    </p>
+    <p>
+        <button type="submit" name="rebre_valors">Rebre valors</button>
+        <button type="submit" name="modificar">Aplicar modificacions</button>
+    </p>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</form>
