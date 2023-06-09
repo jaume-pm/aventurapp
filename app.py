@@ -271,6 +271,69 @@ def crear_personalitzada(codi_llista, creador):
     cur.close()
     conn.close()
 
+def rebre_info_llista_titol(codi_llista_objectiu):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "SELECT titol from projecte.llistes WHERE codi_llista = %s;"
+    cur.execute(insert_query, (codi_llista_objectiu,))
+    titol = cur.fetchone()[0]
+    conn.commit()
+    cur.close()
+    conn.close()
+    return titol
+
+def es_personalitzada(codi_llista_objectiu):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "SELECT codi_llista from projecte.personalitzades WHERE codi_llista = %s;"
+    cur.execute(insert_query, (codi_llista_objectiu,))
+    es_personalitzada = cur.fetchone()
+    cur.close()
+    conn.close()
+    if es_personalitzada == None:
+        return False
+    else:
+        return True
+    
+def rebre_info_llista_creador(codi_llista_objectiu):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "SELECT nom_usuari from projecte.personalitzades WHERE codi_llista = %s;"
+    cur.execute(insert_query, (codi_llista_objectiu,))
+    creador = cur.fetchall()[0]
+    cur.close()
+    conn.close()
+    return creador
+
+def actualitzar_personalitzada(codi_llista_objectiu, codi_llista, titol, creador):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    query = "UPDATE projecte.llistes SET codi_llista = %s, titol = %s WHERE codi_llista = %s"
+    cur.execute(query, (codi_llista, titol, codi_llista_objectiu))
+    conn.commit()
+    query = "UPDATE projecte.personalitzades SET nom_usuari = %s WHERE codi_llista = %s"
+    cur.execute(query, (creador, codi_llista))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def actualitzar_estatica(codi_llista_objectiu, codi_llista, titol):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    query = "UPDATE projecte.llistes SET codi_llista = %s, titol = %s WHERE codi_llista = %s"
+    cur.execute(query, (codi_llista, titol, codi_llista_objectiu))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def eliminar_llista(codi_llista):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "DELETE FROM projecte.llistes WHERE codi_llista = %s;"
+    cur.execute(insert_query, (codi_llista,))
+    conn.commit()
+    cur.close()
+    conn.close()
 
 @app.route("/admin/llistes/crear", methods=["GET", "POST"])
 def admin_llistes_crear():
@@ -295,6 +358,46 @@ def admin_llistes_llista():
     cur.close()
     conn.close()
     return render_template('admin_llistes_llista.html', llistes=llistes)
+
+
+personalitzada = False #global variable per no haver de comprovar 2 vegades
+                        #si la llista es estatica
+@app.route('/admin/llistes/modificar', methods=['GET', 'POST'])
+def admin_llistes_modificar():
+    global personalitzada
+    if request.method == 'POST':
+        if 'rebre_valors' in request.form:
+            codi_llista_objectiu = request.form['codi_llista_objectiu']
+            titol = rebre_info_llista_titol(codi_llista_objectiu)
+            personalitzada = es_personalitzada(codi_llista_objectiu)
+            if personalitzada:
+                creador = rebre_info_llista_creador(codi_llista_objectiu)
+                return render_template('admin_llistes_modificar.html', codi_llista_objectiu=codi_llista_objectiu, 
+                                       codi_llista=codi_llista_objectiu, titol=titol, creador=creador)
+            else:
+                return render_template('admin_llistes_modificar.html', codi_llista_objectiu=codi_llista_objectiu,
+                                        codi_llista=codi_llista_objectiu, titol=titol)
+        elif 'modificar' in request.form:
+            codi_llista_objectiu = request.form['codi_llista_objectiu']
+            codi_llista = request.form['codi_llista']
+            titol = request.form['titol']
+            if personalitzada:
+                creador = request.form['creador']
+                actualitzar_personalitzada(codi_llista_objectiu, codi_llista, titol, creador)
+            else:
+                actualitzar_estatica(codi_llista_objectiu, codi_llista, titol)
+            return render_template('admin_llistes_modificar.html', message="Dades de la llista " + str(codi_llista) + " amb títol " + titol + " actualitzades.")
+        
+    return render_template('admin_llistes_modificar.html')
+
+@app.route("/admin/llistes/eliminar", methods=['GET', 'POST'])
+def admin_llistes_eliminar():
+    if request.method == 'POST':
+        codi_llista = request.form['codi_llista']
+        eliminar_llista(codi_llista)
+        return render_template('admin_llistes_eliminar.html', message= "La llista " + codi_llista + " s'ha eliminat correctament.")
+    return render_template('admin_llistes_eliminar.html')
+
 
 ###############################
 # Estatiques i personalitzades

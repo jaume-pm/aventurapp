@@ -1,0 +1,38 @@
+<form method="POST">
+    <h1 style="width: 100%">{% block title %} Modifica les dades d'un usuari {% endblock %}</h1>
+    <p>
+        <label for="codi_llista">Codi de la llista a modificar:</label>
+        <input type="text" id="codi_llista_objectiu" name="codi_llista_objectiu"
+               value="{{ codi_llista_objectiu }}" required>
+    </p>
+    <button type="submit" name="rebre_valors">Rebre valors</button>
+    {% if codi_llista %}
+    <h3>Dades de la llista:</h2>
+    <p>
+        <label for="codi_llista">Codi de la llista:</label>
+        <input type="text" id="codi_llista" name="codi_llista"
+               value="{{ codi_llista }}">
+    </p>
+    <p>
+        <label for="titol">Títol:</label>
+        <input type="text" id="titol" name="titol"
+               value="{{ titol }}">
+    </p>
+    {% if creador %}
+    <p>
+        <label for="creador">Aventurer creador:</label>
+        <input type="text" id="creador" name="creador"
+               value="{{ creador }}">
+    </p>
+    {% endif %}
+    <p>
+        <button type="submit" name="modificar">Aplicar modificacions</button>
+    </p>
+    {% endif %}
+    <p>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    </p>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</form>
