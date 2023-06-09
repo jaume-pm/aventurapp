@@ -1,0 +1,42 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Crea un compte. {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="nom_usuari">Nom d'usuari: </label>
+            <input type="text" name="nom_usuari"
+                   placeholder="Nom d'usuari">
+            </input>
+        </p>
+
+        <p>
+            <label for="nom">Nom: </label>
+            <input type="text" name="nom"
+                   placeholder="Nom">
+            </input>
+        </p>
+
+        <p>
+            <label for="contrassenya">Contrassenya: </label>
+            <input type="password" name="contrassenya"
+                   placeholder="Contrassenya">
+            </input>
+        </p>
+
+        <p>
+            <label for="aventurer">Vols ser aventurer?</label>
+            <input type="checkbox" name="aventurer"
+                   placeholder="aventurer">
+            </input>
+        </p>
+        <label>Si no marques la casella crearàs el compte com a ocasional.</label>
+
+        <p>
+            <button type="enviat">Crear usuari</button>
+        </p>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <button onclick="location.href = 'http://127.0.0.1:5000/';">Tornar</button>
+{% endblock %}

@@ -1,6 +1,6 @@
 
 {% block content %}
-    <h1 style="width: 100%">{% block title %} Crea un usuari {% endblock %}</h1>
+    <h1 style="width: 100%">{% block title %} Inicia sessió {% endblock %}</h1>
     <form method="post">
         <p>
             <label for="nom_usuari">Nom d'usuari</label>
@@ -22,5 +22,5 @@
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}
-    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    <button onclick="location.href = 'http://127.0.0.1:5000/';">Tornar</button>
 {% endblock %}

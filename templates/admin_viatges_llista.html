@@ -1,0 +1,11 @@
+{% block content %}
+    <h1>{% block title %} Viatges {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% for viatge in viatges %}
+        <div class='viatge'>
+            <h2>id: {{ viatge[0] }}</h2>
+            <p>Nom de l'usuari: {{ viatge[1] }}</p>
+            <p>Nom de la població: {{ viatge[2] }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
