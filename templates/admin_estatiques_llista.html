@@ -1,0 +1,9 @@
+{% block content %}
+    <h1>{% block title %} Llistes estatiques {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% for estatica in estatiques %}
+        <div class='estatica'>
+            <h2>{{ estatica[0] }}</h2>
+        </div>
+    {% endfor %}
+{% endblock %}

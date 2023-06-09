@@ -43,7 +43,9 @@ def crear_ocasional(nom_usuari):
 ##################################
 @app.route("/admin")
 def admin():
-    classes = ["poblacions", "usuaris", "aventurers", "ocasionals", "viatges", "llistes"]
+    classes = ["poblacions", "usuaris", "aventurers", "ocasionals", "viatges", "llistes",
+               "estatiques", "personalitzades", "continguts", "subscripcions_aventurers",
+               "subscripcions_ocasionals"]
     return render_template('admin.html', classes=classes)
 
 
@@ -230,20 +232,93 @@ def admin_poblacions_crear():
 
 
 
+#######################
+# Llistes
+#######################
 
 
+def crear_llista(titol):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "INSERT INTO projecte.llistes (titol) VALUES (%s);"
+    cur.execute(insert_query, (titol,))
+    conn.commit()
+    insert_query = "SELECT codi_llista FROM projecte.llistes WHERE titol = %s;"
+    cur.execute(insert_query, (titol,))
+    conn.commit()
+    codi_llista = cur.fetchall()[0][0]
+    print(codi_llista)
+    cur.close()
+    conn.close()
+    return int(codi_llista)
+
+def crear_estatica(codi_llista):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    print(codi_llista)
+    insert_query = "INSERT INTO projecte.estatiques (codi_llista) VALUES (%s);"
+    cur.execute(insert_query, (codi_llista,))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+def crear_personalitzada(codi_llista, creador):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = "INSERT INTO projecte.personalitzades (codi_llista, nom_usuari) VALUES (%s, %s);"
+    cur.execute(insert_query, (codi_llista, creador,))
+    conn.commit()
+    cur.close()
+    conn.close()
 
 
+@app.route("/admin/llistes/crear", methods=["GET", "POST"])
+def admin_llistes_crear():
+    if request.method == 'POST':
+        titol = request.form['titol']
+        codi_llista = crear_llista(titol)
+        es_personalitzada = request.form.get('personalitzada')
+        if es_personalitzada:
+            creador = request.form['creador']
+            crear_personalitzada(codi_llista, creador)
+        else:
+            crear_estatica(codi_llista)
+        return render_template('admin_llistes_crear.html', message= "La llista" + titol + " amb codi = " + str(codi_llista) +  " s'ha creat correctament.")
+    return render_template('admin_llistes_crear.html')
 
+@app.route("/admin/llistes/llista")
+def admin_llistes_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.llistes ORDER BY codi_llista;')
+    llistes = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_llistes_llista.html', llistes=llistes)
 
+###############################
+# Estatiques i personalitzades
+###############################
 
+@app.route("/admin/estatiques/llista")
+def admin_estatiques_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.estatiques ORDER BY codi_llista;')
+    estatiques = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_estatiques_llista.html', estatiques=estatiques)
 
-
-
-
-
-
-
+@app.route("/admin/personalitzades/llista")
+def admin_personalitzades_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.personalitzades ORDER BY codi_llista;')
+    personalitzades = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_personalitzades_llista.html', personalitzades=personalitzades)
 
 
 
@@ -382,3 +457,24 @@ def home_viatges_llista():
             
     return render_template('home_viatges_llista.html', viatges=viatges, usuari_actiu=usuari_actiu)
 
+
+############################
+# Estatiques i subscripcions ocasionals
+############################
+
+# @app.route("/home/estatiques/subscriures", methods=["GET", "POST"])
+# def home_estatiiques_subscriures():
+#     conn = get_db_connection()
+#     cur = conn.cursor()
+#     insert_query = 'SELECT * FROM projecte.viatges WHERE nom_usuari = %s ORDER BY nom_poblacio;'
+#     cur.execute(insert_query, (usuari_actiu))
+#     viatges = cur.fetchall()
+#     cur.close()
+#     conn.close()
+#     if request.method == 'POST':
+#             if es_aventurer:
+#                 return render_template('home_aventurer.html', usuari_actiu=usuari_actiu)
+#             else:
+#                 return render_template('home_ocasional.html', usuari_actiu=usuari_actiu)
+            
+#     return render_template('admin_viatges_llista.html', viatges=viatges, usuari_actiu=usuari_actiu)

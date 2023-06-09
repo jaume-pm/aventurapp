@@ -1,0 +1,10 @@
+{% block content %}
+    <h1>{% block title %} Llistes {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% for llista in llistes %}
+        <div class='llista'>
+            <h2>{{ llista[0] }}</h2>
+            <p>Títol: {{ llista[1] }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

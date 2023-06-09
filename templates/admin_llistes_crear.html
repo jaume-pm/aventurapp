@@ -1,0 +1,34 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Crea una llista {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="titol">Títol de la llista: </label>
+            <input type="text" name="titol"
+                   placeholder="Títol de la llista">
+            </input>
+        </p>
+        <p>
+            <label for="personalitzada">És una llista personalitzada?</label>
+            <input type="checkbox" name="personalitzada"
+                   placeholder="personalitzada">
+            </input>
+        </p>
+        <label>En cas que la llista sigui personalitzada s'ha d'indicar
+            l'aventurer que l'ha creat.</label>
+        <p>
+            <label for="creador">Nom d'usuari de l'aventurer creador: </label>
+            <input type="text" name="creador"
+                   placeholder="Creador">
+            </input>
+        </p>
+
+        <p>
+            <button type="enviat">Crear llista</button>
+        </p>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% block content %}
+    <h1>{% block title %} Llistes personalitzades {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% for personalitzada in personalitzades %}
+        <div class='personalitzada'>
+            <h2>{{ personalitzada[0] }}</h2>
+        </div>
+    {% endfor %}
+{% endblock %}
