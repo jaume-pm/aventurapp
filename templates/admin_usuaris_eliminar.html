@@ -1,0 +1,19 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Elimina un usuari {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="nom_usuari">Nom d'usuari</label>
+            <input type="text" name="nom_usuari"
+                   placeholder="Nom d'usuari">
+            </input>
+        </p>
+        <p>
+            <button type="enviat">Eliminar usuari</button>
+        </p>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+{% endblock %}

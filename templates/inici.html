@@ -1,0 +1,12 @@
+<form method="POST">
+    <h1 style="width: 100%">{% block title %} Benvingut a Aventurapp {% endblock %}</h1>
+
+    <p>
+        <button type="submit" name="iniciar_sessio">Rebre valors</button>
+        <button type="submit" name="crear_usuari">Aplicar modificacions</button>
+    </p>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</form>

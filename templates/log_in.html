@@ -3,35 +3,20 @@
     <h1 style="width: 100%">{% block title %} Crea un usuari {% endblock %}</h1>
     <form method="post">
         <p>
-            <label for="nom_usuari">Nom d'usuari: </label>
+            <label for="nom_usuari">Nom d'usuari</label>
             <input type="text" name="nom_usuari"
                    placeholder="Nom d'usuari">
             </input>
         </p>
-
         <p>
-            <label for="nom">Nom: </label>
-            <input type="text" name="nom"
-                   placeholder="Nom">
-            </input>
-        </p>
-
-        <p>
-            <label for="contrassenya">Contrassenya: </label>
+            <label for="contrassenya">Contrassenya</label>
             <input type="password" name="contrassenya"
                    placeholder="Contrassenya">
             </input>
         </p>
 
         <p>
-            <label for="aventurer">És aventurer?</label>
-            <input type="checkbox" name="aventurer"
-                   placeholder="aventurer">
-            </input>
-        </p>
-
-        <p>
-            <button type="enviat">Crear usuari</button>
+            <button type="enviat">Iniciar sessió</button>
         </p>
     </form>
     {% if message %}
