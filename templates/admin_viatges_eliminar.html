@@ -1,0 +1,22 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Eliminar viatge {% endblock %}</h1>
+    <form method="post">
+
+        <p>
+            <label for="codi_viatge">Codi del viatge: </label>
+            <input type="text" name="codi_viatge"
+                   placeholder="Codi viatge">
+            </input>
+        </p>
+
+        <p>
+            <button name="enviat">Eliminar viatge</button>
+        </p>
+    </form>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+   
+{% endblock %}

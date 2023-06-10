@@ -1,0 +1,28 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Crea una subscripció d'ocasional {% endblock %}</h1>
+    <form method="post">
+
+        <p>
+            <label for="nom_usuari">Nom de l'ocasional: </label>
+            <input type="text" name="nom_usuari"
+                   placeholder="Ocasional">
+            </input>
+        </p>
+
+        <p>
+            <label for="codi_llista">Codi de la llista: </label>
+            <input type="text" name="codi_llista"
+                   placeholder="Codi de la llista">
+            </input>
+        </p>
+
+        <p>
+            <button type="enviat">Crear subscripció d'ocasional</button>
+        </p>
+    </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+{% endblock %}

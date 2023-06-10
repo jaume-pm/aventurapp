@@ -1,0 +1,41 @@
+<form method="POST">
+    <h1 style="width: 100%">{% block title %} Modifica les dades d'una població {% endblock %}</h1>
+    <p>
+        <label for="nom_poblacio">Nom de la població a modificar:</label>
+        <input type="text" id="nom_poblacio_objectiu" name="nom_poblacio_objectiu"
+               value="{{ nom_poblacio_objectiu }}" required>
+    </p>
+    <button type="submit" name="rebre_valors">Rebre valors</button>
+    {% if comarca %}
+        <h3>Dades de l'usuari:</h2>
+        <p>
+            <label for="nom_poblacio">Usuari:</label>
+            <input type="text" id="nom_poblacio" name="nom_poblacio"
+                value="{{ nom_poblacio }}">
+        </p>
+        <p>
+            <label for="comarca">Comarca:</label>
+            <input type="text" id="comarca" name="comarca"
+                value="{{ comarca }}">
+        </p>
+        <p>
+            <label for="altitud">Altitud:</label>
+            <input type="text" id="altitud" name="altitud"
+                value="{{ altitud }}">
+        </p>
+        <p>
+            <label for="poblacio">Nombre d'habitants:</label>
+            <input type="text" id="poblacio" name="poblacio"
+                value="{{ poblacio }}">
+        </p>
+        <p>
+            <button type="submit" name="modificar">Aplicar modificacions</button>
+        </p>
+    {% endif %}
+    <p>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+</p>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+</form>

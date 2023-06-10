@@ -1,0 +1,10 @@
+{% block content %}
+    <h1>{% block title %} Continguts {% endblock %}</h1>
+    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% for contingut in continguts %}
+        <div class='contingut'>
+            <p>Codi de la llista: {{contingut[1]}}</p>
+            <p>Nom de la població: {{contingut[0]}}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

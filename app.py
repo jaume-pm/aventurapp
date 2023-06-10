@@ -171,6 +171,7 @@ def admin_aventurers_modificar():
 @app.route("/admin/aventurers/eliminar")
 def admin_aventurers_eliminar():
     return render_template('admin_aventurers_eliminar.html')
+
 ####################
 # Ocasionals
 ####################
@@ -201,6 +202,29 @@ def admin_ocasionals_modificar():
 ## Poblacions
 ####################################
 
+def rebre_info_poblacio(nom_poblacio_objectiu):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    query = "SELECT comarca, altitud, poblacio FROM projecte.poblacions WHERE nom_poblacio = %s"
+    cur.execute(query, (nom_poblacio_objectiu,))
+    info = cur.fetchone()
+    comarca = info[0]
+    altitud = info[1]
+    poblacio = info[2]
+    cur.close()
+    conn.close()
+    return comarca, altitud, poblacio
+
+def actualitzar_poblacio(nom_poblacio_objectiu, nom_poblacio, comarca, altitud, poblacio):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    query = "UPDATE projecte.poblacions SET nom_poblacio = %s, comarca = %s, altitud = %s, poblacio = %s WHERE nom_poblacio = %s"
+    cur.execute(query, (nom_poblacio, comarca, altitud, poblacio, nom_poblacio_objectiu))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 @app.route("/admin/poblacions/llista")
 def admin_poblacions_llista():
     conn = get_db_connection()
@@ -225,12 +249,107 @@ def admin_poblacions_crear():
         conn.commit()
         cur.close()
         conn.close()
+        return render_template('admin_poblacions_crear.html', message= "S'ha afegit la població " 
+                           + nom + " al sistema. ")
     return render_template('admin_poblacions_crear.html')
 
+@app.route('/admin/poblacions/modificar', methods=['GET', 'POST']) #TODO CANVIAR RUTA
+def admin_poblacions_modificar():
+    if request.method == 'POST':
+        if 'rebre_valors' in request.form:
+            nom_poblacio_objectiu = request.form['nom_poblacio_objectiu']
+            comarca, altitud, poblacio = rebre_info_poblacio(nom_poblacio_objectiu)
+            return render_template('admin_poblacions_modificar.html', nom_poblacio_objectiu=nom_poblacio_objectiu, nom_poblacio=nom_poblacio_objectiu,
+                                   altitud=altitud, comarca=comarca, poblacio=poblacio)
+        elif 'modificar' in request.form:
+            nom_poblacio_objectiu = request.form['nom_poblacio_objectiu']
+            nom_poblacio = request.form['nom_poblacio']
+            comarca = request.form['comarca']
+            altitud = request.form['altitud']
+            poblacio = request.form['poblacio']
+            actualitzar_poblacio(nom_poblacio_objectiu, nom_poblacio, comarca, altitud, poblacio)
+            return render_template('admin_poblacions_modificar.html',
+                                   message="Dades de la població " + nom_poblacio + " actualitzades.")
+        
+    return render_template('admin_poblacions_modificar.html')
+
+
+@app.route("/admin/poblacions/eliminar", methods=['GET', 'POST'])
+def admin_poblacions_eliminar():
+    if request.method == 'POST':
+        nom_poblacio = request.form['nom_poblacio']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "DELETE FROM projecte.poblacions WHERE nom_poblacio = %s;"
+        cur.execute(insert_query, (nom_poblacio,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_poblacions_eliminar.html', message= "S'ha eliminat la població: " 
+                               + nom_poblacio)
+    return render_template('admin_poblacions_eliminar.html')
+
+############
+# Viatges
+############
 
 
 
+@app.route("/admin/viatges/crear", methods=["GET", "POST"])
+def admin_viatges_crear():
+    if request.method == 'POST':
+        if 'enviat' in request.form:
+            nom_usuari = request.form['nom_usuari']
+            nom_poblacio = request.form['nom_poblacio']
+            conn = get_db_connection()
+            cur = conn.cursor()
+            insert_query = "INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES (%s, %s);"
+            cur.execute(insert_query, (nom_poblacio,nom_usuari))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return render_template('admin_viatges_crear.html', message = "Viatge a " + nom_poblacio + " realitzat per l'usuari "
+                                   + nom_usuari +" realitzar correctament.")
+        
+    return render_template('admin_viatges_crear.html')
 
+@app.route("/admin/viatges/llista", methods=["GET", "POST"])
+def admin_viatges_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    insert_query = 'SELECT * FROM projecte.viatges WHERE nom_usuari = %s ORDER BY nom_poblacio;'
+    cur.execute(insert_query, (usuari_actiu))
+    viatges = cur.fetchall()
+    cur.close()
+    conn.close()
+    if request.method == 'POST':
+            if es_aventurer:
+                return render_template('admin_aventurer.html', usuari_actiu=usuari_actiu)
+            else:
+                return render_template('admin_ocasional.html', usuari_actiu=usuari_actiu)
+            
+    return render_template('admin_viatges_llista.html', viatges=viatges, usuari_actiu=usuari_actiu)
+
+
+@app.route("/admin/viatges/eliminar", methods=['GET', 'POST'])
+def admin_viatges_eliminar():
+    if request.method == 'POST':
+        codi_viatge = request.form['codi_viatge']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "DELETE FROM projecte.viatges WHERE id_viatge = %s;"
+        cur.execute(insert_query, (codi_viatge,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_viatges_eliminar.html', message= "S'ha eliminat el viatge amb codi: " 
+                               + str(codi_viatge))
+    return render_template('admin_viatges_eliminar.html')
+
+
+@app.route("/admin/viatges/modificar")
+def admin_viatges_modificar():
+    return render_template('admin_viatges_modificar.html')
 
 #######################
 # Llistes
@@ -400,7 +519,7 @@ def admin_llistes_eliminar():
 
 
 ###############################
-# Estatiques i personalitzades
+# Estatiques
 ###############################
 
 @app.route("/admin/estatiques/llista")
@@ -413,6 +532,22 @@ def admin_estatiques_llista():
     conn.close()
     return render_template('admin_estatiques_llista.html', estatiques=estatiques)
 
+@app.route("/admin/estatiques/eliminar")
+def admin_estatiques_eliminar():
+    return render_template('admin_estatiques_eliminar.html')
+
+@app.route("/admin/estatiques/crear")
+def admin_estatiques_crear():
+    return render_template('admin_estatiques_crear.html')
+
+@app.route("/admin/estatiques/modificar")
+def admin_estatiques_modificar():
+    return render_template('admin_estatiques_modificar.html')
+
+###############################
+# Personalitzades
+###############################
+
 @app.route("/admin/personalitzades/llista")
 def admin_personalitzades_llista():
     conn = get_db_connection()
@@ -423,7 +558,157 @@ def admin_personalitzades_llista():
     conn.close()
     return render_template('admin_personalitzades_llista.html', personalitzades=personalitzades)
 
+@app.route("/admin/personalitzades/eliminar")
+def admin_personalitzades_eliminar():
+    return render_template('admin_personalitzades_eliminar.html')
 
+@app.route("/admin/personalitzades/crear")
+def admin_personalitzades_crear():
+    return render_template('admin_personalitzades_crear.html')
+
+@app.route("/admin/personalitzades/modificar")
+def admin_personalitzades_modificar():
+    return render_template('admin_personalitzades_modificar.html')
+
+##############################
+## Continguts
+##############################
+
+
+@app.route("/admin/continguts/llista")
+def admin_continguts_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.continguts ORDER BY codi_llista;')
+    continguts = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_continguts_llista.html', continguts=continguts)
+
+
+@app.route("/admin/continguts/crear", methods=["GET", "POST"])
+def admin_continguts_crear():
+    if request.method == 'POST':
+        nom_poblacio = request.form['nom_poblacio']
+        codi_llista = request.form['codi_llista']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "INSERT INTO projecte.continguts (nom_poblacio, codi_llista) VALUES (%s, %s);"
+        cur.execute(insert_query, (nom_poblacio, codi_llista))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_continguts_crear.html', message= "S'ha afegit la població " 
+                           + nom_poblacio + " a la llista amb codi " + str(codi_llista))
+    return render_template('admin_continguts_crear.html')
+
+
+
+@app.route("/admin/continguts/modificar")
+def admin_continguts_modificar():
+    return render_template('admin_continguts_modificar.html')
+
+
+##############################
+## Subscripcions_aventurers
+##############################
+
+@app.route("/admin/subscripcions_aventurers/llista")
+def admin_subscripcions_aventurers_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.subscripcions_aventurers ORDER BY nom_usuari;')
+    continguts = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_subscripcions_aventurers_llista.html', continguts=continguts)
+
+@app.route("/admin/subscripcions_aventurers/crear", methods=["GET", "POST"])
+def admin_subscripcions_aventurers_crear():
+    if request.method == 'POST':
+        nom_usuari = request.form['nom_usuari']
+        codi_llista = request.form['codi_llista']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "INSERT INTO projecte.subscripcions_aventurers (nom_usuari, codi_llista) VALUES (%s, %s);"
+        cur.execute(insert_query, (nom_usuari, codi_llista))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_subscripcions_aventurers_crear.html', message= "L'usuari "
+                           + nom_usuari + " s'ha subscrit a la llista amb codi " + str(codi_llista))
+    return render_template('admin_subscripcions_aventurers_crear.html')
+
+@app.route("/admin/subscripcions_aventurers/eliminar", methods=['GET', 'POST'])
+def admin_subscripcions_aventurers_eliminar():
+    if request.method == 'POST':
+        codi_llista = request.form['codi_llista']
+        nom_usuari = request.form['nom_usuari']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "DELETE FROM projecte.subscripcions_aventurers WHERE codi_llista = %s AND nom_usuari = %s;"
+        cur.execute(insert_query, (codi_llista, nom_usuari,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_subscripcions_aventurers_eliminar.html', message= "S'ha eliminat la subscripció de l'aventurer " 
+                           + nom_usuari + " a la llista amb codi " + str(codi_llista))
+    return render_template('admin_subscripcions_aventurers_eliminar.html')
+
+@app.route("/admin/subscripcions_aventurers/modificar")
+def admin_subscripcions_aventurers_modificar():
+    return render_template('admin_subscripcions_aventurers_modificar.html')
+
+
+###########################
+# Subscripcions_ocasionals
+############################
+
+@app.route("/admin/subscripcions_ocasionals/llista")
+def admin_subscripcions_ocasionals_llista():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM projecte.subscripcions_ocasionals ORDER BY nom_usuari;')
+    continguts = cur.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('admin_subscripcions_ocasionals_llista.html', continguts=continguts)
+
+@app.route("/admin/subscripcions_ocasionals/crear", methods=["GET", "POST"])
+def admin_subscripcions_ocasionals_crear():
+    if request.method == 'POST':
+        nom_usuari = request.form['nom_usuari']
+        codi_llista = request.form['codi_llista']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "INSERT INTO projecte.subscripcions_ocasionals (nom_usuari, codi_llista) VALUES (%s, %s);"
+        cur.execute(insert_query, (nom_usuari, codi_llista))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_subscripcions_ocasionals_crear.html', message= "L'usuari "
+                           + nom_usuari + " s'ha subscrit a la llista amb codi " + str(codi_llista))
+    return render_template('admin_subscripcions_ocasionals_crear.html')
+
+@app.route("/admin/subscripcions_ocasionals/eliminar", methods=['GET', 'POST'])
+def admin_subscripcions_ocasionals_eliminar():
+    if request.method == 'POST':
+        codi_llista = request.form['codi_llista']
+        nom_usuari = request.form['nom_usuari']
+        conn = get_db_connection()
+        cur = conn.cursor()
+        insert_query = "DELETE FROM projecte.subscripcions_ocasionals WHERE codi_llista = %s AND nom_usuari = %s;"
+        cur.execute(insert_query, (codi_llista, nom_usuari,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return render_template('admin_subscripcions_ocasionals_eliminar.html', message= "S'ha eliminat la subscripció de l'ocasional " 
+                           + nom_usuari + " a la llista amb codi " + str(codi_llista))
+    return render_template('admin_subscripcions_ocasionals_eliminar.html')
+
+@app.route("/admin/subscripcions_ocasionals/modificar")
+def admin_subscripcions_ocasionals_modificar():
+    return render_template('admin_subscripcions_ocasionals_modificar.html')
 
 
 

@@ -1,0 +1,29 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Crear viatge {% endblock %}</h1>
+    <form method="post">
+
+        <p>
+            <label for="nom_usuari">Nom de l'usuari: </label>
+            <input type="text" name="nom_usuari"
+                   placeholder="Nom d'usuari'">
+            </input>
+        </p>
+
+        <p>
+            <label for="nom_poblacio">Nom de la població: </label>
+            <input type="text" name="nom_poblacio"
+                   placeholder="Nom de la població">
+            </input>
+        </p>
+
+        <p>
+            <button name="enviat">Crear viatge</button>
+        </p>
+    </form>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+   
+{% endblock %}

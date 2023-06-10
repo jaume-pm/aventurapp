@@ -6,6 +6,7 @@
                value="{{ nom_usuari_objectiu }}" required>
     </p>
     <button type="submit" name="rebre_valors">Rebre valors</button>
+    {% if contrassenya %}
     <h3>Dades de l'usuari:</h2>
     <p>
         <label for="nom_usuari">Usuari:</label>
@@ -25,7 +26,10 @@
     <p>
         <button type="submit" name="modificar">Aplicar modificacions</button>
     </p>
-    <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    {% endif %}
+    <p>
+        <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
+    </p>
     {% if message %}
         <p>{{ message }}</p>
     {% endif %}

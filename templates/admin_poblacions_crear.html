@@ -34,5 +34,8 @@
             <button type="enviat">Crear població</button>
         </p>
     </form>
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
     <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
 {% endblock %}
