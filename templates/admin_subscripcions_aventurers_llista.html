@@ -1,10 +1,10 @@
 {% block content %}
     <h1>{% block title %} Subscripcions d'aventurers {% endblock %}</h1>
     <button onclick="location.href = 'http://127.0.0.1:5000/admin';">Tornar</button>
-    {% for subscripcio_aventurer in subscripcions_aventurers %}
-        <div class='subscripcio_aventurer'>
-            <p>Nom d'usuari d'aventurer: {{subscripcio_aventurer[0]}}</p>
-            <p>Codi de la llista: {{subscripcio_aventurer[1]}}</p>
+    {% for contingut in continguts %}
+        <div class='continguts'>
+            <p>Nom d'usuari d'aventurer: {{contingut[0]}}</p>
+            <p>Codi de la llista: {{contingut[1]}}</p>
         </div>
     {% endfor %}
 {% endblock %}

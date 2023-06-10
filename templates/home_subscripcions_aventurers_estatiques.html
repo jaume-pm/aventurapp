@@ -1,0 +1,21 @@
+{% block content %}
+    <h1>{% block title %} Aquestes són les teves llistes estàtiques {{usuari_actiu}}! {% endblock %}</h1>
+<form method="POST">
+    {% if message %}
+    <h3>{{ message }}</h3>
+    {% endif %}
+    {% for estatica in estatiques %}
+        <div class='estatica'>
+            <div style="display: inline-block;">
+                <h2 style="display: inline;">{{ estatica[0] }}</h2>
+                <button type="submit" name="codi_llista" value="{{ estatica[1] }}|{{ estatica[0] }}" style="display: inline-block; margin-left: 10px;">Desubscriure's</button>
+            </div>
+                {% for poble in estatica[2] %}
+                    <p>{{poble}}</p>
+                {% endfor %}
+        </div>
+    {% endfor %}
+    <button name="tornar">Tornar</button>
+</form>
+
+{% endblock %}

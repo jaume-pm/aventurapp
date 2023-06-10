@@ -1,11 +1,11 @@
 {% block content %}
-    <h1>{% block title %} Els teus viatges {{usuari_actiu}} {% endblock %}</h1>
+    <h1>{% block title %} Aquests són les poblacions on has viatjat {{usuari_actiu}}! {% endblock %}</h1>
     <form method="post">
         <button name="tornar">Tornar</button>
     </form>
     {% for viatge in viatges %}
         <div class='viatge'>
-            <h2>{{ viatge[2] }} (viatge amb id: {{ viatge[0] }} )</h2>
+            <h2>{{viatge[0]}}</h2>
         </div>
     {% endfor %}
 {% endblock %}

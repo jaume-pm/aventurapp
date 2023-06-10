@@ -2,4 +2,19 @@
 {% block content %}
     <h1>{% block title %} Benvingut al home aventurer {{usuari_actiu}} ! {% endblock %}</h1>
     <button onclick="location.href = 'http://127.0.0.1:5000/';">Tancar sessió</button>
+    <h2>Viatges</h2>
+    <div>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/viatges/crear';">Fer un viatge</button>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/viatges/llista';">Veure els meus viatges</button>
+    </div>
+    <h2>Llistes estàtiques</h2>
+    <div>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/estatiques/subscriure';">Subscriure's</button>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/subscripcions_aventurers_estatiques';">Veure les meves subscripcions</button>
+    </div>
+    <h2>Llistes personalitzades</h2>
+    <div>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/personalitzades/subscriure';">Subscriure's</button>
+    <button onclick="location.href = 'http://127.0.0.1:5000/home/subscripcions_aventurers_personalitzades';">Veure les meves subscripcions</button>
+    </div>
 {% endblock %}
