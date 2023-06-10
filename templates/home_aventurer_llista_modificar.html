@@ -1,22 +1,28 @@
 {% block content %}
-    <h1>{% block title %} Aquestes són totes les llistes estàtiques d'Aventurapp! {% endblock %}</h1>
-    <h2>Subscriu-te a una llista estàtica clicant al botó del costat de la llista que t'interessi! </h2>
+    <h1>{% block title %} Modifica la llista seleccionada.{% endblock %}</h1>
 <form method="POST">
     {% if message %}
     <h3>{{ message }}</h3>
     {% endif %}
-    {% for estatica in estatiques %}
-        <div class='estatica'>
-            <div style="display: inline-block;">
-                <h2 style="display: inline;">{{ estatica[0] }}</h2>
-                <input type="hidden" name="titol" value="{{ estatica[0] }}">
-                <button type="submit" name="codi_llista" value="{{ estatica[1] }}|{{ estatica[0] }}" style="display: inline-block; margin-left: 10px;">Subscriure</button>
-            </div>
-                {% for poble in estatica[2] %}
-                    <p>{{poble}}</p>
-                {% endfor %}
+    <div class='personalitzada'>
+        <div style="display: inline-block;">
+            <h2 style="display: inline;">{{ personalitzada[0] }}</h2>
+            
         </div>
-    {% endfor %}
+            {% for poble in personalitzada[2] %}
+            <div style="display: flex; align-items: center;">
+                <p style="margin-right: 10px;">{{ poble }}</p>
+                <button type="submit" name="nom_poblacio_eliminar" value="{{ poble }}">Elimina</button>
+            </div>
+            {% endfor %}
+    </div>
+
+    <div>
+        <label for="input-field" style="display: inline-block;">Introduir població:</label>
+        <input type="text" name="nom_poblacio_afegir" style="display: inline-block;" placeholder="Nom població">
+        <button type="submit" style="display: inline-block;" name="afegir">Afegir</button>
+    </div>
+    <p></p>
     <button name="tornar">Tornar</button>
 </form>
 
