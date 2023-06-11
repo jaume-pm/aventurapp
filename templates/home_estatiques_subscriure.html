@@ -1,9 +1,9 @@
 {% block content %}
     <h1>{% block title %} Aquestes són totes les llistes estàtiques d'Aventurapp! {% endblock %}</h1>
-    <h2>Subscriu-te a una llista estàtica clicant al botó del costat de la llista que t'interessi! </h2>
+    <p>Subscriu-te a una llista estàtica clicant al botó del costat de la llista que t'interessi! </p>
 <form method="POST">
     {% if message %}
-    <h3>{{ message }}</h3>
+    <p style="color:red">{{ message }}</p>
     {% endif %}
     {% for estatica in estatiques %}
         <div class='estatica'>

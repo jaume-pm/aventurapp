@@ -2,6 +2,7 @@
 {% block content %}
     <h1 style="width: 100%">{% block title %} Crea un compte. {% endblock %}</h1>
     <form method="post">
+        
         <p>
             <label for="nom_usuari">Nom d'usuari: </label>
             <input type="text" name="nom_usuari"
@@ -36,7 +37,8 @@
         </p>
     </form>
     {% if message %}
-        <p>{{ message }}</p>
+            <h4 style="color: red">{{ message }}</h4>
     {% endif %}
+    
     <button onclick="location.href = 'http://127.0.0.1:5000/';">Tornar</button>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% block content %}
-    <h1>{% block title %} Aquestes són totes les llistes personalitzades d'Aventurapp! {% endblock %}</h1>
-    <h2>Subscriu-te a una llista personalitzada clicant al botó del costat de la llista que t'interessi! </h2>
+    <h1>{% block title %} Aquestes són les llistes personalitzades creades per tu, {{usuari_actiu}}! {% endblock %}</h1>
+    <p>Selecciona la llista que vulguis modificar fent clic al botó Modificar de la seva dreta. </p>
 <form method="POST">
     {% if message %}
     <h3>{{ message }}</h3>

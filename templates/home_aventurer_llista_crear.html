@@ -1,6 +1,6 @@
 
 {% block content %}
-    <h1 style="width: 100%">{% block title %} Fes un viatge {{usuari_actiu}}! {% endblock %}</h1>
+    <h1 style="width: 100%">{% block title %} Crea una llista {{usuari_actiu}}! {% endblock %}</h1>
     <form method="post">
 
         <p>
@@ -18,10 +18,10 @@
         </p>
 
         <p>
-            <button name="enviat">Fer viatge</button>
+            <button name="enviat">Crear llista</button>
         </p>
         {% if message %}
-            <p>{{ message }}</p>
+            <p style="color: red;">{{ message }}</p>
         {% endif %}
         <button name="tornar">Tornar</button>
     </form>

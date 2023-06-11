@@ -2,7 +2,7 @@
     <h1>{% block title %} Aquestes són les teves llistes {{usuari_actiu}}! {% endblock %}</h1>
 <form method="POST">
     {% if message %}
-    <h3>{{ message }}</h3>
+    <p style="color: red;">{{ message }}</p>
     {% endif %}
     {% for estatica in estatiques %}
         <div class='estatica'>

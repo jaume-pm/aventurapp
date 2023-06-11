@@ -317,17 +317,11 @@ def admin_viatges_crear():
 def admin_viatges_llista():
     conn = get_db_connection()
     cur = conn.cursor()
-    insert_query = 'SELECT * FROM projecte.viatges WHERE nom_usuari = %s ORDER BY nom_poblacio;'
-    cur.execute(insert_query, (usuari_actiu))
+    insert_query = 'SELECT * FROM projecte.viatges ORDER BY nom_poblacio;'
+    cur.execute(insert_query,)
     viatges = cur.fetchall()
     cur.close()
     conn.close()
-    if request.method == 'POST':
-            if es_aventurer:
-                return render_template('admin_aventurer.html', usuari_actiu=usuari_actiu)
-            else:
-                return render_template('admin_ocasional.html', usuari_actiu=usuari_actiu)
-            
     return render_template('admin_viatges_llista.html', viatges=viatges, usuari_actiu=usuari_actiu)
 
 
@@ -719,7 +713,7 @@ def admin_subscripcions_ocasionals_modificar():
 usuari_actiu = "2" #Variable global que indicarà l'usuari que ha iniciat sessió
 es_aventurer = True
 
-@app.route("/")
+@app.route("/",methods=['GET', 'POST'])
 def inici():
     return render_template('inici.html')
 
@@ -778,17 +772,42 @@ def log_in():
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
     if request.method == 'POST':
-        nom_usuari = request.form['nom_usuari']
-        nom = request.form['nom']
-        contrassenya = request.form['contrassenya']
-        crear_usuari(nom_usuari, nom, contrassenya)
-        aventurer = request.form.get('aventurer')
-        if aventurer:
-            crear_aventurer(nom_usuari)
-        else:
-            crear_ocasional(nom_usuari)
-        return render_template('sign_in.html', message= "Benvingut a la familia Aventurapp " + nom_usuari + "!")
+        try:
+            nom_usuari = request.form['nom_usuari']
+            nom = request.form['nom']
+            contrassenya = request.form['contrassenya']
+            crear_usuari(nom_usuari, nom, contrassenya)
+            aventurer = request.form.get('aventurer')
+            if aventurer:
+                crear_aventurer(nom_usuari)
+            else:
+                crear_ocasional(nom_usuari)
+            return render_template('sign_in.html', message= "Benvingut a la familia Aventurapp " + nom_usuari + "!")
+        except psycopg2.errors.UniqueViolation:
+            message = "L'usuari ja existeix. Introdueix un altre nom d'usuari."
+            return render_template('sign_in.html',message=message)
     return render_template('sign_in.html')
+
+
+@app.route("/canviar_contrassenya", methods=["GET", "POST"])
+def canviar_contrasenya():
+    if request.method == 'POST':
+        if 'enviat' in request.form:
+            contrasenya = request.form['contrasenya']
+            conn = get_db_connection()
+            cur = conn.cursor()
+            query = "UPDATE projecte.usuaris SET contrassenya = %s WHERE nom_usuari = %s"
+            cur.execute(query, (contrasenya, usuari_actiu))
+            conn.commit()
+            cur.close()
+            conn.close()
+            return render_template('home_canviar_contrassenya.html', message = "La contrassenya s'ha actualitzat correctament.", usuari_actiu=usuari_actiu)
+        elif 'tornar' in request.form:
+            if es_aventurer:
+                return render_template('home_aventurer.html', usuari_actiu=usuari_actiu)
+            else:
+                return render_template('home_ocasional.html', usuari_actiu=usuari_actiu)   
+    return render_template('home_canviar_contrassenya.html')
 
 
 ############
@@ -812,15 +831,19 @@ def home_aventurer():
 def home_viatges_crear():
     if request.method == 'POST':
         if 'enviat' in request.form:
-            nom_poblacio = request.form['nom_poblacio']
-            conn = get_db_connection()
-            cur = conn.cursor()
-            insert_query = "INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES (%s, %s);"
-            cur.execute(insert_query, (nom_poblacio,usuari_actiu))
-            conn.commit()
-            cur.close()
-            conn.close()
-            return render_template('home_viatges_crear.html', message = "Viatge a " + nom_poblacio + " realitzat correctament.", usuari_actiu=usuari_actiu)
+            try:
+                nom_poblacio = request.form['nom_poblacio']
+                conn = get_db_connection()
+                cur = conn.cursor()
+                insert_query = "INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES (%s, %s);"
+                cur.execute(insert_query, (nom_poblacio,usuari_actiu))
+                conn.commit()
+                cur.close()
+                conn.close()
+                return render_template('home_viatges_crear.html', message = "Viatge a " + nom_poblacio + " realitzat correctament.", usuari_actiu=usuari_actiu)
+            except psycopg2.errors.ForeignKeyViolation:
+                message = "Població no vàlida. Aquesta població no és una població de Catalunya."
+                return render_template('home_viatges_crear.html', message = message, usuari_actiu=usuari_actiu)
         elif 'tornar' in request.form:
             if es_aventurer:
                 return render_template('home_aventurer.html', usuari_actiu=usuari_actiu)
@@ -833,7 +856,7 @@ def home_viatges_llista():
     conn = get_db_connection()
     cur = conn.cursor()
     insert_query = 'SELECT nom_poblacio FROM projecte.viatges WHERE nom_usuari = %s ORDER BY nom_poblacio;'
-    cur.execute(insert_query, (usuari_actiu))
+    cur.execute(insert_query, (usuari_actiu,))
     viatges = cur.fetchall()
     cur.close()
     conn.close()
@@ -901,7 +924,7 @@ def rebre_subscripcions_ocasionals():
         "JOIN projecte.continguts AS c ON l.codi_llista = c.codi_llista "
         "WHERE s.codi_llista IN ("
         "   SELECT codi_llista "
-        "   FROM projecte.subscripcions_aventurers "
+        "   FROM projecte.subscripcions_ocasionals "
         "   WHERE nom_usuari = %s"
         ") "
         "GROUP BY l.titol, l.codi_llista"
@@ -1099,24 +1122,29 @@ def home_aventurer_llista_crear():
     if request.method == 'POST':
         if 'enviat' in request.form:
             global llista_activa
-            titol = request.form['titol']
-            nom_poblacio = request.form['nom_poblacio']
-            conn = get_db_connection()
-            cur = conn.cursor()
-            insert_query = "INSERT INTO projecte.llistes (titol) VALUES (%s) RETURNING codi_llista;"
-            cur.execute(insert_query, (titol,))
-            codi_llista = cur.fetchone()[0]
-            conn.commit()
-            insert_query = "INSERT INTO projecte.personalitzades (codi_llista, nom_usuari) VALUES (%s, %s);"
-            cur.execute(insert_query, (codi_llista, usuari_actiu,))
-            conn.commit()
-            insert_query = "INSERT INTO projecte.continguts (codi_llista, nom_poblacio) VALUES (%s, %s);"
-            cur.execute(insert_query, (codi_llista, nom_poblacio,))
-            conn.commit()
-            cur.close()
-            conn.close()
-            llista_activa = codi_llista
-            return redirect("http://127.0.0.1:5000/home/aventurer/llista/modificar")
+            try:
+                titol = request.form['titol']
+                nom_poblacio = request.form['nom_poblacio']
+                conn = get_db_connection()
+                cur = conn.cursor()
+                insert_query = "INSERT INTO projecte.llistes (titol) VALUES (%s) RETURNING codi_llista;"
+                cur.execute(insert_query, (titol,))
+                codi_llista = cur.fetchone()[0]
+                conn.commit()
+                insert_query = "INSERT INTO projecte.personalitzades (codi_llista, nom_usuari) VALUES (%s, %s);"
+                cur.execute(insert_query, (codi_llista, usuari_actiu,))
+                conn.commit()
+                insert_query = "INSERT INTO projecte.continguts (codi_llista, nom_poblacio) VALUES (%s, %s);"
+                cur.execute(insert_query, (codi_llista, nom_poblacio,))
+                conn.commit()
+                cur.close()
+                conn.close()
+                llista_activa = codi_llista
+                return redirect("http://127.0.0.1:5000/home/aventurer/llista/modificar")
+            except Exception:
+                message = "Població no vàlida. Aquesta població no és una població de Catalunya."
+                return render_template('home_aventurer_llista_crear.html', message=message, usuari_actiu=usuari_actiu)
+            
         elif 'tornar' in request.form:
             if es_aventurer:
                 return render_template('home_aventurer.html', usuari_actiu=usuari_actiu)
@@ -1141,7 +1169,7 @@ def rebre_info_llista_modificar():
     conn.close()
     return personalitzada
 
-@app.route("/home/aventurer/llista/modificar", methods=["GET", "POST"])
+@app.route("/home/aventurer/llista/modificar", methods=["GET", "POST"]) #comentar
 def home_aventurer_llista_modificar():
     if 'nom_poblacio_eliminar' in request.form:
         nom_poblacio = request.form['nom_poblacio_eliminar']
@@ -1154,6 +1182,7 @@ def home_aventurer_llista_modificar():
         conn.close()
         personalitzada = rebre_info_llista_modificar()
         return render_template('home_aventurer_llista_modificar.html', personalitzada=personalitzada)
+    
     elif 'afegir' in request.form:
         try:
             nom_poblacio = request.form['nom_poblacio_afegir']
@@ -1170,11 +1199,17 @@ def home_aventurer_llista_modificar():
             message = "Una mateixa població només pot apareixer una vegada en una llista."
             personalitzada = rebre_info_llista_modificar()
             return render_template('home_aventurer_llista_modificar.html', personalitzada=personalitzada, message=message)
+        except psycopg2.errors.ForeignKeyViolation:
+            message = "Població no vàlida. Aquesta població no és una població de Catalunya."
+            personalitzada = rebre_info_llista_modificar()
+            return render_template('home_aventurer_llista_modificar.html', personalitzada=personalitzada, message=message)
+    
     elif 'tornar' in request.form:
         if es_aventurer:
             return render_template('home_aventurer.html', usuari_actiu=usuari_actiu)
         else:
             return render_template('home_ocasional.html', usuari_actiu=usuari_actiu)
+        
     personalitzada = rebre_info_llista_modificar()  
     return render_template('home_aventurer_llista_modificar.html', usuari_actiu=usuari_actiu, personalitzada=personalitzada)
 

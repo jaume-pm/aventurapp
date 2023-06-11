@@ -1,0 +1,20 @@
+
+{% block content %}
+    <h1 style="width: 100%">{% block title %} Canviar contrasenya {% endblock %}</h1>
+    <form method="post">
+        <p>
+            <label for="contrasenya">Introdueix la nova contrasenya: </label>
+            <input type="password" name="contrasenya"
+                   placeholder="Nova contrassenya">
+            </input>
+        </p>
+
+        <p>
+            <button name="enviat">Canviar contrasenya</button>
+        </p>
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+        <button name="tornar">Tornar</button>
+    </form>
+{% endblock %}
