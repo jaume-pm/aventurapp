@@ -22,4 +22,7 @@
     <button onclick="location.href = 'http://127.0.0.1:5000/home/aventurer/llista/crear';">Crear llista</button>
     <button onclick="location.href = 'http://127.0.0.1:5000/home/aventurer/llista/seleccionar';">Modificar llista</button>
     </div>
+    {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
 {% endblock %}

@@ -360,7 +360,6 @@ def crear_llista(titol):
     cur.execute(insert_query, (titol,))
     conn.commit()
     codi_llista = cur.fetchall()[0][0]
-    print(codi_llista)
     cur.close()
     conn.close()
     return int(codi_llista)
@@ -368,7 +367,6 @@ def crear_llista(titol):
 def crear_estatica(codi_llista):
     conn = get_db_connection()
     cur = conn.cursor()
-    print(codi_llista)
     insert_query = "INSERT INTO projecte.estatiques (codi_llista) VALUES (%s);"
     cur.execute(insert_query, (codi_llista,))
     conn.commit()
@@ -735,6 +733,7 @@ def contrassenya_correcte(nom_usuari, contrassenya):
         else:
             return 0
 
+
 def rebre_rol(nom_usuari):
     global es_aventurer
     conn = get_db_connection()
@@ -768,6 +767,7 @@ def log_in():
         else:
             return render_template('log_in.html', message="L'usuari " + nom_usuari + " no existeix.")
     return render_template('log_in.html')
+
 
 @app.route("/sign_in", methods=["GET", "POST"])
 def sign_in():
@@ -886,7 +886,6 @@ def home_estatiiques_subscriure():
     estatiques = cur.fetchall()
     cur.close()
     conn.close()
-    print("entramo")
     if 'codi_llista' in request.form:
         info = request.form['codi_llista']
         codi_llista, titol = info.split('|')
@@ -1080,7 +1079,6 @@ def home_personalitzades_subscriure():
         else:
             return render_template('home_ocasional.html', usuari_actiu=usuari_actiu)
     personalitzades = rebre_personalitzades()
-    print(personalitzades)
     return render_template('home_personalitzades_subscriure.html', personalitzades=personalitzades, usuari_actiu=usuari_actiu)
 
 
@@ -1156,12 +1154,12 @@ def rebre_info_llista_modificar():
     conn = get_db_connection()
     cur = conn.cursor()
     insert_query = (
-        "SELECT l.titol, p.nom_usuari, array_agg(c.nom_poblacio) AS poblacions "
+        "SELECT l.titol,array_agg(c.nom_poblacio) AS poblacions "
         "FROM projecte.llistes AS l "
         "JOIN projecte.personalitzades AS p ON l.codi_llista = p.codi_llista "
         "JOIN projecte.continguts AS c ON l.codi_llista = c.codi_llista "
         "WHERE l.codi_llista = %s "
-        "GROUP BY l.titol, p.nom_usuari"
+        "GROUP BY l.titol"
     )
     cur.execute(insert_query, (llista_activa,))
     personalitzada = cur.fetchone()
@@ -1169,7 +1167,7 @@ def rebre_info_llista_modificar():
     conn.close()
     return personalitzada
 
-@app.route("/home/aventurer/llista/modificar", methods=["GET", "POST"]) #comentar
+@app.route("/home/aventurer/llista/modificar", methods=["GET", "POST"]) #video
 def home_aventurer_llista_modificar():
     if 'nom_poblacio_eliminar' in request.form:
         nom_poblacio = request.form['nom_poblacio_eliminar']
@@ -1178,9 +1176,17 @@ def home_aventurer_llista_modificar():
         insert_query = "DELETE FROM projecte.continguts WHERE codi_llista = %s AND nom_poblacio = %s;"
         cur.execute(insert_query, (llista_activa, nom_poblacio,))
         conn.commit()
+        personalitzada = rebre_info_llista_modificar()
+        if personalitzada is None:
+            insert_query = "DELETE FROM projecte.llistes WHERE codi_llista = %s;"
+            cur.execute(insert_query, (llista_activa,))
+            conn.commit()
+            cur.close()
+            conn.close()
+            message = "S'ha eliminat la llista."
+            return render_template('home_aventurer.html', usuari_actiu=usuari_actiu, message=message)
         cur.close()
         conn.close()
-        personalitzada = rebre_info_llista_modificar()
         return render_template('home_aventurer_llista_modificar.html', personalitzada=personalitzada)
     
     elif 'afegir' in request.form:
