@@ -2,7 +2,7 @@ from flask import Flask, request, redirect
 from flask import render_template
 
 #Private file which includes nom_usuari and password for my remote postgresql server 
-from get_connection import get_db_connection;
+from get_db_connection import get_db_connection;
 import psycopg2
 
 app = Flask(__name__)

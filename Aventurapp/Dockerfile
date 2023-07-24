@@ -8,7 +8,7 @@ WORKDIR /app
 COPY app.py .
 COPY /templates ./templates
 COPY /static ./static
-COPY get_connection.py .
+COPY get_db_connection.py .
 
 # Copy the requirements.txt file to the container
 COPY requirements.txt .
