@@ -1,7 +1,9 @@
 # Aventurapp
 
 Welcome to Aventurapp! This is a web application designed to help users discover and explore various destinations and create personalized travel lists. Whether you're an adventure enthusiast or a casual traveler, Aventurapp has something for everyone.
+
 ![](https://github.com/jaume-pm/aventurapp/blob/main/static/Aventurapp.png =400x400)
+
 ## Features
 
 - **Explore**: Browse through a wide range of pre-defined travel lists and discover exciting destinations.
