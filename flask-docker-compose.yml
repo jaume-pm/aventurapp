@@ -6,7 +6,7 @@ services:
     restart: always
     volumes:
       - './Postgres/data:/var/lib/postgresql/data'
-      - './Postgres/create_tables.sql:/docker-entrypoint-initdb.d/create_tables.sql'
+      - './Postgres/initialize:/docker-entrypoint-initdb.d/'
     environment:
       - POSTGRES_PASSWORD=Aventurapp
     ports:
