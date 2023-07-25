@@ -2,3 +2,4 @@
 get_connection.py
 .vscode/launch.json
 *.pyc
+Postgres/data/*

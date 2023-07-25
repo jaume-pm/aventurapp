@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    restart: always
+    volumes:
+      - './Postgres/data:/var/lib/postgresql/data'
+    environment:
+      - POSTGRES_PASSWORD=Aventurapp
+    ports:
+      - '5432:5432'
+
+  flask_app:
+    build: /Aventurapp
+    environment:
+      - POSTGRES_HOST=postgres
+    ports:
+      - "5000:5000"
