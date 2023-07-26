@@ -78,9 +78,9 @@ CREATE TABLE IF NOT EXISTS projecte.subscripcions_ocasionals (
 CREATE TABLE IF NOT EXISTS projecte.viatges (
     codi_viatge SERIAL PRIMARY KEY,
     nom_usuari VARCHAR(100) NOT NULL,
-    codi_llista SERIAL NOT NULL,
+    nom_poblacio VARCHAR(100) NOT NULL,
     FOREIGN KEY (nom_usuari) REFERENCES projecte.usuaris(nom_usuari)
     ON DELETE RESTRICT ON UPDATE CASCADE,
-    FOREIGN KEY (codi_llista) REFERENCES projecte.llistes(codi_llista)
+    FOREIGN KEY (nom_poblacio) REFERENCES projecte.poblacions(nom_poblacio)
     ON DELETE RESTRICT ON UPDATE CASCADE
 );
