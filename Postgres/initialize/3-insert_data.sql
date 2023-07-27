@@ -139,21 +139,31 @@ INSERT INTO projecte.ocasionals (nom_usuari)
 VALUES ('Miles52');
 
 
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Les', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Sitges', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Prades', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Cerdanyola del Vallés', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Gavà', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Lladorre', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Masroig', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Masroig', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Querol', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Selva de Mar', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Selva de Mar', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Sitges', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Valls de Valira', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Valls de Valira', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Vilella Baixa', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Vilella Baixa', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Sort', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Sant Quintí de Mediona', 'Indiana22')
+INSERT INTO projecte.viatges (nom_poblacio, nom_usuari) VALUES ('Rupià', 'Indiana22')
 
--- INSERT INTO projecte.llistes (titol)
--- VALUES ('Favorite Places');
 
--- INSERT INTO projecte.estatiques (codi_llista)
--- VALUES (1);
-
-
--- INSERT INTO projecte.subscripcions_aventurers (nom_usuari, codi_llista)
--- VALUES ('john_doe', 1);
+INSERT INTO projecte.llistes (titol) VALUES ('Towns with urban art')
+INSERT INTO projecte.estatiques (codi_llista) VALUES (6)
+INSERT INTO projecte.continguts (nom_poblacio, codi_llista) VALUES ('Penelles', '6')
+INSERT INTO projecte.continguts (nom_poblacio, codi_llista) VALUES ('Tarragona', '6')
+INSERT INTO projecte.continguts (nom_poblacio, codi_llista) VALUES ('Torroella de Fluvià', '6')
 
 
--- INSERT INTO projecte.subscripcions_ocasionals (nom_usuari, codi_llista)
--- VALUES ('jane_smith', 2);
-
-
--- INSERT INTO projecte.viatges (nom_usuari, codi_llista)
--- VALUES ('john_doe', 1);
