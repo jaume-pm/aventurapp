@@ -92,7 +92,7 @@ def eliminar_usuari(nom_usuari):
     cur.close()
     conn.close()
 
-@app.route('/admin/usuaris/modificar', methods=['GET', 'POST']) #TODO CANVIAR RUTA
+@app.route('/admin/usuaris/modificar', methods=['GET', 'POST'])
 def admin_usuaris_modificar():
     if request.method == 'POST':
         if 'rebre_valors' in request.form:
