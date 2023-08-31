@@ -5,13 +5,18 @@ FROM python:3.9
 WORKDIR /app
 
 # Copy the application code to the container
-COPY app.py .
+
 COPY /templates ./templates
 COPY /static ./static
-COPY get_db_connection.py .
+COPY /controllers ./controllers
+COPY /routes ./routes
 
-# Copy the requirements.txt file to the container
+COPY get_db_connection.py .
 COPY requirements.txt .
+COPY globals.py .
+COPY app.py .
+
+
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
